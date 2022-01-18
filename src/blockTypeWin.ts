@@ -22,7 +22,7 @@ export class BlockTypeWindow {
     for (let g of blockGroups) {
       s += div({ class: 'block-group' },
         div({ class: 'name' }, g.name),
-        div({ class: 'block' }, ...g.types.map(t => img({ src: `block/${t.id}.png`, title: t.name, bid: t.id }))))
+        div({ class: 'block' }, ...g.types.map(t => img({ src: `public/block/${t.id}.png`, title: t.name, bid: t.id }))))
     }
     return div({ class: 'block-group-win' }, s);
   }

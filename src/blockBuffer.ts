@@ -77,7 +77,7 @@ export class BlockBuffer {
       for (let t of g.types) {
         this.bid2bt[t.id] = t;
         try {
-          let img = await loadImage(`block/${t.id}.png`);
+          let img = await loadImage(`public/block/${t.id}.png`);
           t.imageBitmap = await createImageBitmap(img);
         } catch (e) {
           console.log(`error on ${t.id} image load`);
