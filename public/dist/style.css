@@ -1,0 +1,229 @@
+/*!****************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./sass/app.scss ***!
+  \****************************************************************************************************************************************************************/
+.menu-back {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+}
+.menu-back .menu-stack {
+  padding: 3px;
+  position: absolute;
+  background-color: #444;
+}
+.menu-back .menu-stack button.menu {
+  text-align: left;
+  margin: 0px;
+  display: block;
+  color: white;
+  width: 100%;
+  white-space: nowrap;
+}
+.menu-back .menu-stack button.menu .name {
+  display: inline-block;
+  margin: 0px 10px;
+}
+.menu-back .menu-stack button.menu .with-check {
+  display: inline-block;
+  width: 24px;
+}
+.menu-back .menu-stack button.menu.disable {
+  color: darkgray;
+}
+.menu-back .menu-stack div.menu.separator {
+  border-bottom: solid 1px #888;
+}
+.menu-back .menu-stack button.menu:hover {
+  background-color: #888;
+}
+
+.block-group-win {
+  display: inline-block;
+  border: 1px solid green;
+  margin: 5px;
+  padding: 5px;
+}
+.block-group-win .block-group > div {
+  display: inline-block;
+}
+.block-group-win .block-group .name {
+  width: 80px;
+}
+.block-group-win .block-group .block img {
+  border: 2px solid lightgray;
+}
+.block-group-win .block-group .block img.selected {
+  border: 2px dashed red;
+}
+
+.block-size-dialog {
+  margin-left: 50px;
+}
+.block-size-dialog div {
+  display: inline-block;
+  margin: 10px;
+}
+.block-size-dialog div label {
+  width: 30px;
+}
+.block-size-dialog div input {
+  width: 50px;
+}
+
+.perspective-dialog {
+  display: flex;
+  justify-content: center;
+}
+.perspective-dialog div.line .item input[type=number] {
+  width: 60px;
+}
+
+.minecraft-dlg > div {
+  margin: 20px 5px;
+}
+.minecraft-dlg .direction label {
+  margin: 5px 0px;
+  font-family: sans-serif;
+}
+.minecraft-dlg .direction select {
+  display: block;
+  margin-left: 20px;
+}
+.minecraft-dlg .offset .title {
+  margin: 5px 0px;
+}
+.minecraft-dlg .offset .coordinate {
+  margin-left: 20px;
+}
+.minecraft-dlg .offset .coordinate > div {
+  display: inline-block;
+  margin: 5px;
+}
+.minecraft-dlg .offset .coordinate > div input {
+  width: 80px;
+}
+
+.tally-blocks-dlg .table .data {
+  border-bottom: 1px solid black;
+}
+.tally-blocks-dlg .table .data > div {
+  display: inline-block;
+}
+.tally-blocks-dlg .table .no {
+  width: 30px;
+  text-align: right;
+}
+.tally-blocks-dlg .table .image {
+  width: 30px;
+}
+.tally-blocks-dlg .table .name {
+  width: 160px;
+}
+.tally-blocks-dlg .table .num {
+  width: 100px;
+  text-align: right;
+}
+.tally-blocks-dlg .table .num-stack {
+  width: 200px;
+}
+.tally-blocks-dlg .table .trailer > div {
+  display: inline-block;
+}
+.tally-blocks-dlg .table .trailer .title {
+  margin-left: 50px;
+  width: 180px;
+}
+.tally-blocks-dlg .table .trailer .value {
+  width: 100px;
+  text-align: right;
+}
+
+#main div.whole {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#main div.whole .top {
+  white-space: nowrap;
+  display: flex;
+}
+#main div.whole .top > div {
+  vertical-align: bottom;
+}
+#main div.whole .top .tool-box {
+  flex-grow: 10;
+  display: inline-block;
+}
+#main div.whole .top .tool-box .status {
+  height: 32px;
+  margin: 5px;
+  padding: 3px;
+  border: dotted 1px green;
+}
+#main div.whole .top .tool-box .tool-bar {
+  margin: 5px;
+  padding: 5px;
+  border: solid black 1px;
+}
+#main div.whole .top .tool-box .tool-bar button.tool {
+  font-size: large;
+}
+#main div.whole .top .tool-box .tool-bar button.tool.pushed {
+  color: red;
+}
+#main div.whole .top .block-group-win {
+  flex-shrink: 10;
+  overflow-x: auto;
+}
+
+#canvas-frame {
+  height: 100%;
+  display: flex;
+  flex-grow: 10;
+  /*
+  canvas {
+    height: 100%;
+    width: 100%;
+  } */
+}
+
+#canvas-frame[mode=select] {
+  cursor: auto;
+}
+
+#canvas-frame[mode=pan] {
+  cursor: grab;
+}
+
+#canvas-frame[mode=paint] {
+  cursor: url(372bf1c0dffabd88fa68.svg) 1 16, auto;
+}
+
+#canvas-frame[mode=rect-fill] {
+  cursor: url(75d078b547e1c0688445.svg) 1 16, auto;
+}
+
+#canvas-frame[mode=erase] {
+  cursor: url(28f601af4840ac7e6d31.svg) 1 16, auto;
+}
+
+#canvas-frame[mode=spoid] {
+  cursor: url(2987bb6cf52c53c4120f.svg) 1 16, auto;
+}
+
+#canvas-frame[mode=measure] {
+  cursor: url(377e2e80ce03206463f7.svg), auto;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+body #main {
+  flex-grow: 10;
+}
+
+/*# sourceMappingURL=style.css.map*/

@@ -1,0 +1,23 @@
+.block-size-dialog {
+  margin-left: 50px;
+  div {
+    display: inline-block;
+    margin: 10px;
+    label {
+      width: 30px;
+    }
+    input {
+      width: 50px;
+    }
+  }
+}
+
+.perspective-dialog {
+  display: flex;
+  justify-content: center;
+  div.line {
+    .item input[type="number"] {
+      width: 60px;
+    }
+  }
+}

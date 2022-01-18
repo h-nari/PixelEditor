@@ -1,0 +1,71 @@
+.minecraft-dlg {
+  > div {
+    margin: 20px 5px;
+  }
+  .direction {
+    label {
+      margin: 5px 0px;
+      font-family: sans-serif;
+    }
+    select {
+      display: block;
+      margin-left: 20px;
+    }
+  }
+  .offset {
+    .title {
+      margin: 5px 0px;
+    }
+    .coordinate {
+      margin-left: 20px;
+      > div {
+        display: inline-block;
+        margin: 5px;
+        input {
+          width: 80px;
+        }
+      }
+    }
+  }
+}
+
+.tally-blocks-dlg {
+  .table {
+    .data {
+      border-bottom: 1px solid black;
+      > div {
+        display: inline-block;
+      }
+    }
+    .no {
+      width: 30px;
+      text-align: right;
+    }
+    .image {
+      width: 30px;
+    }
+    .name {
+      width: 160px;
+    }
+    .num {
+      width: 100px;
+      text-align: right;
+    }
+    .num-stack {
+      width: 200px;
+    }
+    .trailer {
+      > div {
+        display: inline-block;
+      }
+      .title {
+        margin-left: 50px;
+        width: 180px;
+      }
+      .value {
+        width: 100px;
+        text-align: right;
+      }
+    }
+  }
+}

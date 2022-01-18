@@ -1,0 +1,22 @@
+.block-group-win {
+  display: inline-block;
+  border: 1px solid green;
+  margin: 5px;
+  padding: 5px;
+  .block-group {
+    > div {
+      display: inline-block;
+    }
+    .name {
+      width: 80px;
+    }
+    .block {
+      img {
+        border: 2px solid lightgray;
+      }
+      img.selected {
+        border: 2px dashed red;
+      }
+    }
+  }
+}
