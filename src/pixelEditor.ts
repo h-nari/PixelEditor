@@ -1,7 +1,7 @@
 import { assert_not_null } from "./asserts";
 import { BlockTypeWindow } from "./blockTypeWin";
 import { CoordinateTransformation, ICoordinateTransformationState } from "./ct";
-import { div, input } from "./tag";
+import { a, div, input, span } from "./tag";
 import { BlockBuffer, IBlockBufferState } from "./blockBuffer";
 import { ToolBar } from "./toolBar";
 import { Menu } from "./menu";
@@ -483,8 +483,46 @@ export class PixelEditor {
     this.menus.push(this.tp.makeMenu());
     this.menus.push(new Menu({
       name: 'ヘルプ', children: [
-        { name: 'このプログラムについて' }
+        {
+          name: 'このプログラムについて',
+          action: async (e, m) => {
+            let packageJson = await getPackageJson();
+            $.confirm({
+              title: 'このプログラムについて',
+              columnClass: 'medium',
+              content: div(
+                div({ class: 'my-3 ms-1' },
+                  span({ class: 'fs-3 fw-bold text-capitalize' }, packageJson.name),
+                  div({ class: 'd-inline-block ms-2' }, ' version', packageJson.version)),
+                div({ class: 'my-2' }, '作成者: @h_nari'),
+                div({ class: 'my-2' }, 'ソースファイルは以下で公開されています。'),
+                a({ href: 'https://github.com/h-nari/PixelEditor', target: '_blank' },
+                  'https://github.com/h-nari/PixelEditor')
+              )
+            });
+          }
+        }, {
+          name: '使い方',
+          link_open: 'https://github.com/h-nari/PixelEditor/blob/main/README.md'
+        }
       ]
     }));
   }
+}
+
+
+function getPackageJson(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'get',
+      url: 'package.json?' + Date.now(),
+      dataType: 'json',
+      success: (data, datatype) => {
+        resolve(data);
+      },
+      error: (xhr, ts, et) => {
+        reject(et);
+      }
+    })
+  })
 }
