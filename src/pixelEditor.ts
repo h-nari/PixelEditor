@@ -130,10 +130,12 @@ export class PixelEditor {
         this.currentMode?.onMouseUp(e);
       else if (e.button == 1) {
         this.spoid(e);
-        if (this.btw.selected_bid)
-          this.modeSet('paint');
-        else
-          this.modeSet('erase');
+        if (this.currentMode?.name != 'rect-fill') {
+          if (this.btw.selected_bid)
+            this.modeSet('paint');
+          else
+            this.modeSet('erase');
+        }
         e.stopPropagation();
         e.preventDefault();
       }

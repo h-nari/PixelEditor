@@ -147,6 +147,10 @@ export class TemplatePicture {
         cv.imshow(this.srcCanvas, this.srcImg);
         this.trapezoid = [marker(0, 0), marker(0, h), marker(w, h), marker(w, 0)];
         this.ct = new CoordinateTransformation(1 / 16, 0, 1 / 16, 0);
+        this.bDisp = true;
+        this.bDispInFrame = false;
+        this.dispImage = 'src';
+        this.parent.viewAll();
         this.parent.save();
         this.parent.draw();
       }
