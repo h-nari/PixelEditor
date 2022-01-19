@@ -44,8 +44,8 @@ export class BlockTypeWindow {
     $('.block-group-win .block-group .block img').on('click', e => {
       let bid = $(e.currentTarget).attr('bid');
       this.selecteBlock(bid);
-
-      this.parent.modeSet('paint');
+      if (this.parent.currentMode?.name != 'rect-fill')
+        this.parent.modeSet('paint');
     })
   }
 
