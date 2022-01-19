@@ -98,6 +98,14 @@ export class PixelEditor {
     await this.bb.init();
   }
 
+  initHtml() {
+    return div({ class: 'initializing-win' },
+      div({ class: 'title' }, 'PixelEditor 初期化中...'),
+      div({ class: 'status' }, ' status')
+    );
+  }
+
+
   html() {
     return div({ class: 'whole' },
       div({ class: 'top' },

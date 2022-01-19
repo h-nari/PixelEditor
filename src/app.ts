@@ -22,6 +22,7 @@ $(async () => {
   } else {
     let pe = new PixelEditor();
     window.pe = pe;
+    $('#main').html(pe.initHtml());
     await pe.init();
     pe.load();
     $('#main').html(pe.html());

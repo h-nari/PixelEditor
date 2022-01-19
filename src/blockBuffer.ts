@@ -77,6 +77,7 @@ export class BlockBuffer {
       for (let t of g.types) {
         this.bid2bt[t.id] = t;
         try {
+          this.parent.status(`${t.name}`)
           let img = await loadImage(`public/block/${t.id}.png`);
           t.imageBitmap = await createImageBitmap(img);
         } catch (e) {

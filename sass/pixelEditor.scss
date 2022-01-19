@@ -3,6 +3,26 @@
 @use "blockBuffer.scss";
 @use "menu.scss";
 
+.initializing-win {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  .title {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px;
+  }
+  .status {
+    margin: 20px;
+    font-size: large;
+    color: red;
+    text-align: center;
+  }
+}
+
 #main {
   div.whole {
     height: 100%;
