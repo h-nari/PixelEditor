@@ -103,7 +103,7 @@ export class TemplatePicture {
     }
   }
 
-  loadPictureFromLocalStrage() {
+  loadPictureFromLocalStorage() {
     let data_url = localStorage.getItem('pixelEditor-picture');
     if (data_url) {
       this.clearPicture();

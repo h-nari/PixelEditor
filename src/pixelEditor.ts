@@ -44,7 +44,7 @@ export class PixelEditor {
   public y0 = 0;
   private menus: Menu[] = [];
   public backgroundType: BackgroundType = 'monochrome';
-  public backgroundColor: string = '#808080';
+  public backgroundColor: string = '#c0c080';
   public moved = 0;
   public modes: ModeHander[] = [];
   public currentMode: ModeHander | undefined;
@@ -284,7 +284,7 @@ export class PixelEditor {
       let s = JSON.parse(str) as IState;
       this.setState(s);
     }
-    this.tp.loadPictureFromLocalStrage();
+    this.tp.loadPictureFromLocalStorage();
   }
 
   setState(s: IState) {
@@ -336,7 +336,7 @@ export class PixelEditor {
       let s = JSON.parse(json) as IStateFile;
       if (s.pictureData) {
         localStorage.setItem('pixelEditor-picture', s.pictureData);
-        this.tp.loadPictureFromLocalStrage();
+        this.tp.loadPictureFromLocalStorage();
       } else {
         this.tp.clearPicture();
         localStorage.removeItem('pixelEditor-picture');
@@ -385,6 +385,38 @@ export class PixelEditor {
     $('.status').text(mes);
   }
 
+  /**
+   * クリアの実行を確認するダイアログ
+   */
+  clearDialog() {
+    $.confirm({
+      title: 'クリアの確認',
+      content: div(
+        div('ブロック及び背景画像のデータを全てクリアします。'),
+        div('本当に実行しますか？')),
+      buttons: {
+        ok: {
+          text: 'クリアを実行する',
+          action: () => { this.clear() }
+        },
+        cancel: {
+          text: '実行しない'
+        }
+      }
+    });
+  }
+
+  /**
+   * PixelEditを初期状態に戻す。
+   * 
+   * LocalStorageを空にして再起動する。
+   */
+  clear() {
+    localStorage.removeItem('pixelEditor');
+    localStorage.removeItem('pixelEditor-picture');
+    document.location.reload();
+  }
+
   // ------------------------------------------------------------------------------------------------
   //
   //     Make Menu
@@ -395,9 +427,10 @@ export class PixelEditor {
     this.menus.push(new Menu({
       name: 'ファイル',
       children: [
-        { name: 'Load', action: (e, m) => { this.fileLoadKick(); } },
-        { name: 'Save', action: (e, m) => { this.fileSave(); } },
+        { name: 'クリア', action: (e, m) => { this.clearDialog(); } },
         { separator: true },
+        { name: '開く', action: (e, m) => { this.fileLoadKick(); } },
+        { name: '保存', action: (e, m) => { this.fileSave(); } },
       ]
     }));
 
