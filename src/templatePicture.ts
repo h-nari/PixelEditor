@@ -158,7 +158,17 @@ export class TemplatePicture {
       let reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (d) => {
-        localStorage.setItem('pixelEditor-picture', reader.result as string);
+        try {
+          let s = reader.result as string;
+          console.log('length:', s.length);
+          if (s.length > 4000000)
+            $.alert('画像ファイルが大きすぎて ブラウザに保存できません。<br/>1Mbyte未満の画像ファイルをご利用ください。');
+          else
+            localStorage.setItem('pixelEditor-picture', s);
+        } catch (e) {
+          console.log('error:', e);
+          $.alert(e)
+        }
       }
     }
   }
