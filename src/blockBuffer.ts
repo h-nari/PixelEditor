@@ -189,7 +189,8 @@ export class BlockBuffer {
       { pitch: 1, color: 'white' }, { pitch: 2, color: 'gray' },
       { pitch: 4, color: 'red' }, { pitch: 16, color: 'blue' }];
     const ygrids: TGrid[] = [
-      { pitch: 1, color: 'white' }, { pitch: 2, color: 'gray' }, { pitch: 4, color: 'red' }];
+      { pitch: 1, color: 'white' }, { pitch: 2, color: 'gray' },
+      { pitch: 4, color: 'red' }, { pitch: 16, color: 'blue' }];
 
     let c = this.parent.canvas;
     let m = this.minecraft;
