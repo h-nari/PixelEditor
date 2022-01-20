@@ -217,12 +217,14 @@ export class PixelEditor {
   }
 
   onResize() {
-    if (this.canvas.parentElement) {
-      let { clientWidth: w, clientHeight: h } = this.canvas.parentElement;
-      this.canvas.width = w;
-      this.canvas.height = h;
-      $(this.canvas).width(w).height(h);
-    }
+    let h0 = $('#main .whole').height() as number;
+    let w = $('#main .whole').width() as number;
+    let h1 = $('#main .whole .top').height() as number;
+    let h = h0 - h1;
+    $('#main .whole .canvas-frame').height(h);
+    this.canvas.width = w;
+    this.canvas.height = h;
+    $(this.canvas).width(w).height(h);
     this.draw();
   }
 

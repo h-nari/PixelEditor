@@ -1,5 +1,5 @@
 {
-  "name": "pixelEditor",
+  "name": "pixel_editor",
   "version": "1.0.0",
   "description": "pixel editor for minecraft",
   "main": "index.js",

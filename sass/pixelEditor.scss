@@ -24,6 +24,7 @@
 }
 
 #main {
+  height: 100%;
   div.whole {
     height: 100%;
     display: flex;
@@ -63,14 +64,8 @@
   }
 }
 #canvas-frame {
-  height: 100%;
   display: flex;
   flex-grow: 10;
-  /*
-  canvas {
-    height: 100%;
-    width: 100%;
-  } */
 }
 
 #canvas-frame[mode="select"] {
