@@ -17,7 +17,8 @@ export interface ITemplatePictureState {
   dispImage?: 'src' | 'dst';
   trapezoid?: { x: number, y: number }[] | undefined;
   warpedRect?: { x: number, y: number, w: number, h: number } | undefined;
-  ct: ICoordinateTransformationState;
+  srcCt?: ICoordinateTransformationState;
+  dstCt?: ICoordinateTransformationState;
 };
 
 export class TemplatePicture {
@@ -28,7 +29,8 @@ export class TemplatePicture {
   public bDispFrame: boolean = true;
   public bDispInFrame: boolean = false;        // フレーム内の画像のみ表示
   public trapezoid: Marker[] | undefined;
-  public ct: CoordinateTransformation;
+  public srcCt: CoordinateTransformation;
+  public dstCt: CoordinateTransformation;
   public grabbing: number | undefined;
   public srcCanvas: HTMLCanvasElement;
   public dstCanvas: HTMLCanvasElement;
@@ -39,10 +41,12 @@ export class TemplatePicture {
 
   constructor(parent: PixelEditor) {
     this.parent = parent;
-    this.ct = new CoordinateTransformation();
-    this.ct.ax = this.ct.ay = 1 / 16;
+    this.srcCt = new CoordinateTransformation();
+    this.srcCt.ax = this.srcCt.ay = 1 / 16;
     this.srcCanvas = document.getElementById('opencv-canvas-1') as HTMLCanvasElement;
     assert_not_null(this.srcCanvas);
+    this.dstCt = new CoordinateTransformation();
+    this.dstCt.ax = this.dstCt.ay = 1 / 16;
     this.dstCanvas = document.getElementById('opencv-canvas-2') as HTMLCanvasElement;
     assert_not_null(this.dstCanvas);
   }
@@ -60,7 +64,8 @@ export class TemplatePicture {
       bDisp: this.bDisp,
       bDispFrame: this.bDispFrame,
       bDispInFrame: this.bDispInFrame,
-      ct: this.ct.save(),
+      srcCt: this.srcCt.save(),
+      dstCt: this.dstCt.save(),
       dispImage: this.dispImage,
       trapezoid: this.trapezoid,
       warpedRect: this.warpedRect,
@@ -81,10 +86,11 @@ export class TemplatePicture {
       this.warpedRect = new Rect(r.x, r.y, r.w, r.h);
     } else
       this.warpedRect = undefined;
-    this.ct.load(s.ct);
+    if (s.srcCt) this.srcCt.load(s.srcCt);
+    if (s.dstCt) this.dstCt.load(s.dstCt);
 
     if (this.srcImg && this.trapezoid && this.warpedRect) {
-      this.setPerspective(this.warpedRect.transform(this.ct))
+      this.setPerspective(this.warpedRect.transform(this.srcCt))
     }
   }
 
@@ -116,7 +122,7 @@ export class TemplatePicture {
         this.dstCanvas.height = this.srcImg.rows;
         cv.imshow(this.srcCanvas, this.srcImg);
         if (this.trapezoid && this.warpedRect) {
-          let target = this.warpedRect.transform(this.ct);
+          let target = this.warpedRect.transform(this.srcCt);
           this.setPerspective(target);
         }
         this.parent.draw();
@@ -146,7 +152,7 @@ export class TemplatePicture {
         this.dstCanvas.height = h;
         cv.imshow(this.srcCanvas, this.srcImg);
         this.trapezoid = [marker(0, 0), marker(0, h), marker(w, h), marker(w, 0)];
-        this.ct = new CoordinateTransformation(1 / 16, 0, 1 / 16, 0);
+        this.srcCt = new CoordinateTransformation(1 / 16, 0, 1 / 16, 0);
         this.bDisp = true;
         this.bDispInFrame = false;
         this.dispImage = 'src';
@@ -177,7 +183,7 @@ export class TemplatePicture {
     if (this.bDisp) {
       ctx.save();
       ctx.imageSmoothingEnabled = false;
-      let ct = ct0.join(this.ct);
+      let ct = ct0.join(this.dispImage == 'src' ? this.srcCt : this.dstCt);
       let c = this.dispImage == 'src' ? this.srcCanvas : this.dstCanvas;
       let w = ct.ax * c.width;
       let h = ct.ay * c.height;
@@ -210,7 +216,7 @@ export class TemplatePicture {
   }
 
   drawWarpedRect(ctx: CanvasRenderingContext2D, ct0: CoordinateTransformation) {
-    let ct = ct0.join(this.ct);
+    let ct = ct0.join(this.srcCt);
     let r = this.warpedRect;
     if (r) {
       let rr = r.transform(ct);
@@ -227,7 +233,7 @@ export class TemplatePicture {
 
   drawTrapezoid(ctx: CanvasRenderingContext2D, ct0: CoordinateTransformation) {
     if (this.trapezoid) {
-      let ct = ct0.join(this.ct);
+      let ct = ct0.join(this.srcCt);
       ctx.save();
       ctx.globalCompositeOperation = 'difference';
       ctx.lineWidth = 1;
@@ -273,7 +279,7 @@ export class TemplatePicture {
   }
 
   hitTest(e: JQuery.MouseDownEvent | JQuery.MouseMoveEvent | JQuery.MouseUpEvent): number | undefined {
-    let ct = this.parent.ct.join(this.ct);
+    let ct = this.parent.ct.join(this.srcCt);
     let mx = e.clientX - e.currentTarget.offsetLeft;
     let my = e.clientY - e.currentTarget.offsetTop;
     if (this.trapezoid) {
@@ -294,8 +300,8 @@ export class TemplatePicture {
       let ct = this.parent.ct;
       // let dx = (e.clientX - this.parent.x0) / (this.ct.ax * ct.ax);
       // let dy = (e.clientY - this.parent.y0) / (this.ct.ay * ct.ay);
-      let dx = dx0 / (this.ct.ax * ct.ax);
-      let dy = dy0 / (this.ct.ay * ct.ay);
+      let dx = dx0 / (this.srcCt.ax * ct.ax);
+      let dy = dy0 / (this.srcCt.ay * ct.ay);
       let m = this.trapezoid[this.grabbing];
       m.x += dx;
       m.y += dy;
@@ -322,7 +328,7 @@ export class TemplatePicture {
     if (!this.img || !this.bDisp)
       return undefined;
 
-    let ct = ct0.join(this.ct);
+    let ct = ct0.join(this.srcCt);
 
     if (this.dispImage == 'src') {                  // 遠近法ワープ前画像
       if (this.bDispInFrame && this.trapezoid) {
@@ -474,10 +480,10 @@ export class TemplatePicture {
     // rDstが(-rDst2.x,-rDst2y)ずれたものが 
     // target:Rect に表示されるようにする
 
-    this.ct.ax = target.w / rDst.w;
-    this.ct.bx = target.x - (rDst.x - rDst2.x) * this.ct.ax;
-    this.ct.ay = target.h / rDst.h;
-    this.ct.by = target.y - (rDst.y - rDst2.y) * this.ct.ay;
+    this.dstCt.ax = target.w / rDst.w;
+    this.dstCt.bx = target.x - (rDst.x - rDst2.x) * this.dstCt.ax;
+    this.dstCt.ay = target.h / rDst.h;
+    this.dstCt.by = target.y - (rDst.y - rDst2.y) * this.dstCt.ay;
 
     //
     // 表示
@@ -529,12 +535,6 @@ export class TemplatePicture {
           name: '背景画像読み込み',
           action: (e, menu) => { this.kickLoadPicture(); }
         },
-        /*
-        {
-          name: 'ブロックサイズ設定',
-          action: (e, menu) => { this.blockSizeDialog(); }
-        },
-        */
         { separator: true },
         {
           name: '遠近法ワープ',

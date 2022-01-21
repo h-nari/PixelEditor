@@ -143,8 +143,10 @@ class ResizableRect extends Rect {
       this.pe.bb.resize(this);
       this.pe.ct.bx += this.pe.ct.ax * this.x;
       this.pe.ct.by += this.pe.ct.ay * this.y;
-      this.pe.tp.ct.bx -= this.x;
-      this.pe.tp.ct.by -= this.y;
+      this.pe.tp.srcCt.bx -= this.x;
+      this.pe.tp.srcCt.by -= this.y;
+      this.pe.tp.dstCt.bx -= this.x;
+      this.pe.tp.dstCt.by -= this.y;
       let m = this.pe.bb.minecraft;
       if (m) {
         console.log('offset:', this.x, this.y);
