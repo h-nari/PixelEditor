@@ -122,7 +122,7 @@ export class TemplatePicture {
         this.dstCanvas.height = this.srcImg.rows;
         cv.imshow(this.srcCanvas, this.srcImg);
         if (this.trapezoid && this.warpedRect) {
-          let target = this.warpedRect.transform(this.srcCt);
+          let target = this.warpedRect.transform(this.dstCt);
           this.setPerspective(target);
         }
         this.parent.draw();
@@ -216,7 +216,7 @@ export class TemplatePicture {
   }
 
   drawWarpedRect(ctx: CanvasRenderingContext2D, ct0: CoordinateTransformation) {
-    let ct = ct0.join(this.srcCt);
+    let ct = ct0.join(this.dstCt);
     let r = this.warpedRect;
     if (r) {
       let rr = r.transform(ct);
@@ -328,9 +328,8 @@ export class TemplatePicture {
     if (!this.img || !this.bDisp)
       return undefined;
 
-    let ct = ct0.join(this.srcCt);
-
     if (this.dispImage == 'src') {                  // 遠近法ワープ前画像
+      let ct = ct0.join(this.srcCt);
       if (this.bDispInFrame && this.trapezoid) {
         let m0 = this.trapezoid[0];
         let r = new Rect(m0.x, m0.y, 0, 0);
@@ -343,6 +342,7 @@ export class TemplatePicture {
         return r.transform(ct);
       }
     } else if (this.dispImage == 'dst') {          // 遠近法ワープ変換後
+      let ct = ct0.join(this.dstCt);
       if (this.bDispInFrame && this.warpedRect)
         return this.warpedRect.transform(ct);
       else if (this.dstImg)
@@ -357,6 +357,8 @@ export class TemplatePicture {
    */
 
   perspectiveDialog() {
+    let w = this.parent.bb.col;
+    let h = this.parent.bb.row;
     var jc = $.confirm({
       title: '遠近法ワープ',
       type: 'blue',
@@ -366,11 +368,11 @@ export class TemplatePicture {
           label('領域のサイズ'),
           div({ class: 'item d-inline-block' },
             label('幅'),
-            input({ class: 'width', type: 'number', value: 40 })
+            input({ class: 'width', type: 'number', value: w })
           ),
           div({ class: 'item d-inline-block' },
             label('高さ'),
-            input({ class: 'height', type: 'number', value: 30 })
+            input({ class: 'height', type: 'number', value: h })
           ),
         )
       ),
