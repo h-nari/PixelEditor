@@ -1,4 +1,5 @@
 import { blockGroups, IBlockType } from "./blockTypes";
+import { Color } from "./color";
 import { PixelEditor } from "./pixelEditor";
 import { div, img } from "./tag";
 
@@ -49,4 +50,13 @@ export class BlockTypeWindow {
     })
   }
 
+  /**
+   * 最も近い色のブロックのbidを返す
+   * 
+   * @param color 
+   * @returns 
+   */
+  selectBlockWithClosestColor(color: Color): string | undefined {
+    return undefined;
+  }
 }

@@ -1,9 +1,12 @@
+import { Color } from "./color";
+
 export interface IBlockType {
   id: string;
   name: string;
   idx?: number;
   imageBitmap?: ImageBitmap;
   use?: boolean;
+  color?: Color;
 };
 
 interface IBlockGroup {

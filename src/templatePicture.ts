@@ -1,4 +1,5 @@
 import cv, { Mat } from "opencv-ts";
+import { cvshow, getPixel } from "./cv_utils";
 import { assert_not_null } from "./asserts";
 import { CoordinateTransformation, ICoordinateTransformationState } from "./ct";
 import { marker, Marker } from "./marker";
@@ -7,6 +8,7 @@ import { PixelEditor } from "./pixelEditor";
 import { Point } from "./point";
 import { Rect } from "./rect";
 import { div, input, label } from "./tag";
+import { Color } from "./color";
 
 const grip_size = 10;
 
@@ -529,32 +531,18 @@ export class TemplatePicture {
     let bw = this.parent.bb.col;
     let bh = this.parent.bb.row;
     cv.resize(img1, img2, new cv.Size(bw, bh), 0, 0, cv.INTER_AREA);
-    this.showImg(img2);
+    // cvshow(img2);
 
-    for(let y=0; y < bh; y++){
-      for(let x=0; x < bw; x++){
-        
+    for (let y = 0; y < bh; y++) {
+      for (let x = 0; x < bw; x++) {
+        let color = getPixel(img2, x, y);
+        let bid = this.parent.btw.selectBlockWithClosestColor(color);
+        this.parent.bb.setPixcel(x, y, bid);
       }
     }
     img1.delete();
     img2.delete();
-  }
-
-  /**
-   * openCVの画像(Mat)を表示、デバッグ用
-   * @param img 
-   */
-  showImg(img: Mat) {
-    let c = document.getElementById('opencv-canvas-debug') as HTMLCanvasElement;
-    if (c) {
-      let w = img.cols;
-      let h = img.rows;
-      console.log(`img1: ${w} x ${h}`);
-      c.width = w;
-      c.height = h;
-      $(c).width(w).height(h);
-      cv.imshow(c, img);
-    }
+    this.parent.draw();
   }
 
   makeMenu(): Menu {
