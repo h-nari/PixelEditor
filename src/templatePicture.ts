@@ -149,7 +149,7 @@ export class TemplatePicture {
         let w = this.img.width;
         let h = this.img.height;
         this.srcCanvas.width = w;
-        this.dstCanvas.height = h;
+        this.srcCanvas.height = h;
         cv.imshow(this.srcCanvas, this.srcImg);
         this.trapezoid = [marker(0, 0), marker(0, h), marker(w, h), marker(w, 0)];
         this.srcCt = new CoordinateTransformation(1 / 16, 0, 1 / 16, 0);
@@ -496,6 +496,67 @@ export class TemplatePicture {
     this.parent.draw();
   }
 
+  /**
+   * ブロック自動配置ダイアログ
+   */
+  blockPlaceDialog() {
+    $.confirm({
+      title: 'ブロック自動配置',
+      content: '背景画像をもとにブロックを自動配置します',
+      buttons: {
+        place: {
+          text: '自動配置',
+          action: () => { this.blockPlace(); }
+        },
+        cancel: {
+          text: '閉じる'
+        }
+      }
+    })
+  }
+
+  /**
+   * 背景画像を元にブロックを自動配置する。
+   */
+  blockPlace() {
+    if (!this.dstImg) throw new Error('no dstImg');
+    if (!this.warpedRect) throw new Error('no warpedRect');
+
+    let wr = this.warpedRect;
+    console.log('wr:', wr);
+    let img1 = this.dstImg.roi(new cv.Rect(wr.x, wr.y, wr.w, wr.h));
+    let img2 = new cv.Mat();
+    let bw = this.parent.bb.col;
+    let bh = this.parent.bb.row;
+    cv.resize(img1, img2, new cv.Size(bw, bh), 0, 0, cv.INTER_AREA);
+    this.showImg(img2);
+
+    for(let y=0; y < bh; y++){
+      for(let x=0; x < bw; x++){
+        
+      }
+    }
+    img1.delete();
+    img2.delete();
+  }
+
+  /**
+   * openCVの画像(Mat)を表示、デバッグ用
+   * @param img 
+   */
+  showImg(img: Mat) {
+    let c = document.getElementById('opencv-canvas-debug') as HTMLCanvasElement;
+    if (c) {
+      let w = img.cols;
+      let h = img.rows;
+      console.log(`img1: ${w} x ${h}`);
+      c.width = w;
+      c.height = h;
+      $(c).width(w).height(h);
+      cv.imshow(c, img);
+    }
+  }
+
   makeMenu(): Menu {
     return new Menu({
       name: '背景画像',
@@ -557,6 +618,11 @@ export class TemplatePicture {
             this.parent.save();
             this.parent.draw();
           }
+        }, {
+          separator: true,
+        }, {
+          name: 'ブロック自動配置',
+          action: (e, m) => { this.blockPlaceDialog(); }
         }
       ]
     });
