@@ -160,8 +160,10 @@ export class BlockBuffer {
       }
       ctx.restore();
       this.drawRect(ctx, ct);
-      this.drawGrid(ctx, ct);
-      if (this.bDispFrame) this.drawFrame(ctx, ct);
+      if (this.bDispFrame) {
+        this.drawGrid(ctx, ct);
+        this.drawFrame(ctx, ct);
+      }
       if (this.parent.currentMode instanceof ArtiboardModeHandler)
         this.parent.currentMode.draw(ctx, ct);
       this.drawSelectedRect(ctx, ct);
@@ -593,7 +595,7 @@ export class BlockBuffer {
           }
         },
         {
-          name: '座標表示',
+          name: 'フレーム表示',
           with_check: true,
           onBeforeExpand: m => {
             m.opt.checked = this.bDispFrame && this.bDisp;

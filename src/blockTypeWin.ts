@@ -1,5 +1,6 @@
+import { assert_not_null } from "./asserts";
 import { blockGroups, IBlockType } from "./blockTypes";
-import { Color } from "./color";
+import { Color, ColorRGB } from "./color";
 import { PixelEditor } from "./pixelEditor";
 import { div, img } from "./tag";
 
@@ -57,6 +58,43 @@ export class BlockTypeWindow {
    * @returns 
    */
   selectBlockWithClosestColor(color: Color): string | undefined {
-    return undefined;
+    let min_dist = 0;
+    let block: IBlockType | undefined;
+
+    for (let g of blockGroups) {
+      for (let t of g.types) {
+        if (!t.color && t.imageBitmap)
+          t.color = this.getAverageColor(color.value.type, t.imageBitmap);
+        assert_not_null(t.color);
+        let dist = color.distance(t.color);
+        if (!block || dist < min_dist) {
+          block = t;
+          min_dist = dist;
+        }
+      }
+    }
+    return block?.id;
+  }
+
+
+  getAverageColor(type: string, im: ImageBitmap): Color {
+    let ctx = this.parent.canvas.getContext('2d');
+    assert_not_null(ctx);
+    ctx.drawImage(im, 0, 0);
+    let w = im.width;
+    let h = im.height;
+    let d = ctx.getImageData(0, 0, w, h);
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    for (let i = 0; i < w * h; i++) {
+      r += d.data[i * 4];
+      g += d.data[i * 4 + 1];
+      b += d.data[i * 4 + 2];
+    }
+    r /= w * h;
+    g /= w * h;
+    b /= w * h;
+    return new Color({ type: 'RGB', r, g, b });
   }
 }

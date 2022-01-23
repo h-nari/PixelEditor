@@ -20,11 +20,11 @@ export function cvshow(img: Mat, canvas_id: string = 'opencv-canvas-debug') {
 }
 
 export function getPixel(img: Mat, x: number, y: number): Color {
-  let w = img.rows;
-  let h = img.cols;
+  let w = img.cols;
+  let h = img.rows;
 
   if (x < 0 || x >= w || y < 0 || y >= h)
     throw new Error(`(${x},${y}) is out of range, image is ${w}x${h})`);
-  let p = img.ucharPtr(x, y);
+  let p = img.ucharPtr(y,x);
   return new Color({ type: 'RGB', r: p[0], g: p[1], b: p[2], a: p[3] })
 }

@@ -504,6 +504,7 @@ export class TemplatePicture {
   blockPlaceDialog() {
     $.confirm({
       title: 'ブロック自動配置',
+      columnClass: 'medium',
       content: '背景画像をもとにブロックを自動配置します',
       buttons: {
         place: {
@@ -533,6 +534,7 @@ export class TemplatePicture {
     cv.resize(img1, img2, new cv.Size(bw, bh), 0, 0, cv.INTER_AREA);
     // cvshow(img2);
 
+    console.log('bw:', bw, 'bh:', bh);
     for (let y = 0; y < bh; y++) {
       for (let x = 0; x < bw; x++) {
         let color = getPixel(img2, x, y);
