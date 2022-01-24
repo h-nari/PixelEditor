@@ -509,7 +509,9 @@ export class TemplatePicture {
       buttons: {
         place: {
           text: '自動配置',
-          action: () => { this.blockPlace(); }
+          action: () => {
+            this.blockPlace();
+          }
         },
         cancel: {
           text: '閉じる'
@@ -537,7 +539,7 @@ export class TemplatePicture {
     console.log('bw:', bw, 'bh:', bh);
     for (let y = 0; y < bh; y++) {
       for (let x = 0; x < bw; x++) {
-        let color = getPixel(img2, x, y);
+        let color = getPixel(img2, x, y).to('LAB');
         let bid = this.parent.btw.selectBlockWithClosestColor(color);
         this.parent.bb.setPixcel(x, y, bid);
       }

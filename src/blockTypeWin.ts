@@ -64,7 +64,7 @@ export class BlockTypeWindow {
     for (let g of blockGroups) {
       for (let t of g.types) {
         if (!t.color && t.imageBitmap)
-          t.color = this.getAverageColor(color.value.type, t.imageBitmap);
+          t.color = this.getAverageColor(color.value.type, t.imageBitmap).to('LAB');
         assert_not_null(t.color);
         let dist = color.distance(t.color);
         if (!block || dist < min_dist) {
