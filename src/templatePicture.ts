@@ -7,8 +7,9 @@ import { Menu } from "./menu";
 import { PixelEditor } from "./pixelEditor";
 import { Point } from "./point";
 import { Rect } from "./rect";
-import { div, input, label } from "./tag";
+import { button, div, input, label } from "./tag";
 import { Color } from "./color";
+import { TabbedWindow } from "./tabbedWindow";
 
 const grip_size = 10;
 
@@ -505,7 +506,17 @@ export class TemplatePicture {
     $.confirm({
       title: 'ブロック自動配置',
       columnClass: 'medium',
-      content: '背景画像をもとにブロックを自動配置します',
+      content: div({ class: 'block-place-dialog' },
+        div('背景画像を元にブロックを自動配置します'),
+        div({ class: 'button-box my-3' },
+          button({ class: 'btn btn-select-blocks bg-light mx-3' }, '使用ブロック選択')
+        )
+      ),
+      onOpen: () => {
+        $('.block-place-dialog .btn-select-blocks').on('click', () => {
+          this.selectBlocksDialog();
+        })
+      },
       buttons: {
         place: {
           text: '自動配置',
@@ -516,6 +527,35 @@ export class TemplatePicture {
         cancel: {
           text: '閉じる'
         }
+      }
+    })
+  }
+
+  /**
+   * 自動配置に使用するブロックを選択するダイアログ
+   */
+  selectBlocksDialog() {
+    let tab = new TabbedWindow({
+      tabs: [
+        {
+          name: 'ブロック一覧',
+          content: 'ブロック一覧の中身'
+        }, {
+          name: '使用されているブロック',
+          content: '使用されているブロックの中身'
+        }
+      ]
+    });
+    $.confirm({
+      title: '使用ブロック選択',
+      columnClass: 'large',
+      content: div({ class: 'select-blocks-dialog' },
+        div({ class: 'my-3' }, '自動配置に使用するブロックを選択してください'),
+        tab.html()
+      ),
+      onOpen: () => { tab.bind(); },
+      buttons: {
+        '閉じる': () => { }
       }
     })
   }
@@ -548,6 +588,12 @@ export class TemplatePicture {
     img2.delete();
     this.parent.draw();
   }
+
+  /**
+   * 背景画像のメニュー
+   * 
+   * @returns メニュー
+   */
 
   makeMenu(): Menu {
     return new Menu({
@@ -615,6 +661,9 @@ export class TemplatePicture {
         }, {
           name: 'ブロック自動配置',
           action: (e, m) => { this.blockPlaceDialog(); }
+        }, {
+          name: '使用ブロック選択',
+          action: (e, m) => { this.selectBlocksDialog(); }
         }
       ]
     });
