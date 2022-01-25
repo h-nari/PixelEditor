@@ -1,0 +1,17 @@
+.tree-control {
+  .tree-node {
+    .tree-node-self {
+      button.tree-node-btn {
+        background-color: inherit;
+        border: unset;
+      }
+      button.tree-node-btn:focus {
+        border: unset;
+        outline: unset;
+      }
+    }
+    .tree-children {
+      margin-left: 20px;
+    }
+  }
+}

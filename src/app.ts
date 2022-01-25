@@ -13,7 +13,6 @@ window.onresize = () => {
 $(async () => {
   let url = new URL(document.URL);
   if (url.searchParams.get('print') == 'tally') {
-    console.log('Print');
     let pe = new PixelEditor();
     await pe.init();
     pe.load();

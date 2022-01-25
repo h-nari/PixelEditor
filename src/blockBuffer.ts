@@ -81,8 +81,8 @@ export class BlockBuffer {
           let img = await loadImage(`public/block/${t.id}.png`);
           t.imageBitmap = await createImageBitmap(img);
         } catch (e) {
-          console.log(`error on ${t.id} image load`);
-          console.log('error:', e);
+          console.error(`error on ${t.id} image load`);
+          console.error('error:', e);
         }
       }
     }
@@ -504,7 +504,6 @@ export class BlockBuffer {
             let x = s.x;
             let y = s.y;
             let m = this.calcMinecraftCoordinate(x, y);
-            console.log('m:', m);
             assert_not_null(m);
             this.minecraft.offset.x += mx - m.x;
             this.minecraft.offset.y += my - m.y;
@@ -572,7 +571,6 @@ export class BlockBuffer {
         '印刷用ウィンドウを開く': () => {
           let url = new URL(document.URL);
           url.search = 'print=tally';
-          console.log('url:', url.toString());
           window.open(url.toString(), '_blank');
         }
       }

@@ -25,7 +25,7 @@ export class TabbedWindow {
   html() {
     if (!this.opt.active) this.opt.active = this.opt.tabs[0].name;
 
-    return div({ class: 'tabbed-window' + (this.opt.class || ''), id: this.id },
+    return div({ class: 'tabbed-window ' + (this.opt.class || ''), id: this.id },
       div({ class: 'tab-box' },
         ul({ class: 'nav nav-tabs' },
           ... this.opt.tabs.map(t =>
@@ -47,9 +47,7 @@ export class TabbedWindow {
   }
 
   bind() {
-    console.log('bind');
     $(`#${this.id} .nav-tabs .nav-item a.nav-link`).on('click', e => {
-      console.log('click');
       $(`#${this.id} a.nav-link.active`).removeClass('active');
       $(e.currentTarget).addClass('active');
 

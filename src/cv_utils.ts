@@ -11,7 +11,6 @@ export function cvshow(img: Mat, canvas_id: string = 'opencv-canvas-debug') {
     $(c).removeClass('d-none');
     let w = img.cols;
     let h = img.rows;
-    console.log(`img1: ${w} x ${h}`);
     c.width = w;
     c.height = h;
     $(c).width(w).height(h);

@@ -9,7 +9,7 @@ export interface IBlockType {
   color?: Color;
 };
 
-interface IBlockGroup {
+export interface IBlockGroup {
   name: string;
   use?: boolean;
   types: IBlockType[];
@@ -111,3 +111,7 @@ export var blockGroups: IBlockGroup[] = [{
     { name: '赤い砂岩', id: 'red_sandstone' },
     { name: 'レッドストーンブロック', id: 'redstone_block' }],
 }];
+
+
+
+

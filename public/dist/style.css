@@ -80,6 +80,11 @@
   width: 60px;
 }
 
+.select-blocks-tab .tab-body {
+  min-height: 200px;
+  max-height: 500px;
+}
+
 .minecraft-dlg > div {
   margin: 20px 5px;
 }
@@ -138,6 +143,22 @@
 .tally-blocks-dlg .table .trailer .value {
   width: 100px;
   text-align: right;
+}
+
+.tree-control .tree-node .tree-node-self button.tree-node-btn {
+  background-color: inherit;
+  border: unset;
+}
+.tree-control .tree-node .tree-node-self button.tree-node-btn:focus {
+  border: unset;
+  outline: unset;
+}
+.tree-control .tree-node .tree-children {
+  margin-left: 20px;
+}
+
+.select-blocks-dialog .tree-node-self:hover {
+  border: dashed 1px lightgray;
 }
 
 .initializing-win {

@@ -1,15 +1,14 @@
 import cv, { Mat } from "opencv-ts";
-import { cvshow, getPixel } from "./cv_utils";
 import { assert_not_null } from "./asserts";
+import { blockSelectDialog } from "./blockSelectDialog";
 import { CoordinateTransformation, ICoordinateTransformationState } from "./ct";
+import { getPixel } from "./cv_utils";
 import { marker, Marker } from "./marker";
 import { Menu } from "./menu";
 import { PixelEditor } from "./pixelEditor";
 import { Point } from "./point";
 import { Rect } from "./rect";
 import { button, div, input, label } from "./tag";
-import { Color } from "./color";
-import { TabbedWindow } from "./tabbedWindow";
 
 const grip_size = 10;
 
@@ -169,13 +168,12 @@ export class TemplatePicture {
       reader.onload = (d) => {
         try {
           let s = reader.result as string;
-          console.log('length:', s.length);
           if (s.length > 4000000)
             $.alert('画像ファイルが大きすぎて ブラウザに保存できません。<br/>1Mbyte未満の画像ファイルをご利用ください。');
           else
             localStorage.setItem('pixelEditor-picture', s);
         } catch (e) {
-          console.log('error:', e);
+          console.error('error:', e);
           $.alert(e)
         }
       }
@@ -513,9 +511,7 @@ export class TemplatePicture {
         )
       ),
       onOpen: () => {
-        $('.block-place-dialog .btn-select-blocks').on('click', () => {
-          this.selectBlocksDialog();
-        })
+        $('.block-place-dialog .btn-select-blocks').on('click', () => { blockSelectDialog(); })
       },
       buttons: {
         place: {
@@ -531,34 +527,6 @@ export class TemplatePicture {
     })
   }
 
-  /**
-   * 自動配置に使用するブロックを選択するダイアログ
-   */
-  selectBlocksDialog() {
-    let tab = new TabbedWindow({
-      tabs: [
-        {
-          name: 'ブロック一覧',
-          content: 'ブロック一覧の中身'
-        }, {
-          name: '使用されているブロック',
-          content: '使用されているブロックの中身'
-        }
-      ]
-    });
-    $.confirm({
-      title: '使用ブロック選択',
-      columnClass: 'large',
-      content: div({ class: 'select-blocks-dialog' },
-        div({ class: 'my-3' }, '自動配置に使用するブロックを選択してください'),
-        tab.html()
-      ),
-      onOpen: () => { tab.bind(); },
-      buttons: {
-        '閉じる': () => { }
-      }
-    })
-  }
 
   /**
    * 背景画像を元にブロックを自動配置する。
@@ -568,15 +536,12 @@ export class TemplatePicture {
     if (!this.warpedRect) throw new Error('no warpedRect');
 
     let wr = this.warpedRect;
-    console.log('wr:', wr);
     let img1 = this.dstImg.roi(new cv.Rect(wr.x, wr.y, wr.w, wr.h));
     let img2 = new cv.Mat();
     let bw = this.parent.bb.col;
     let bh = this.parent.bb.row;
     cv.resize(img1, img2, new cv.Size(bw, bh), 0, 0, cv.INTER_AREA);
-    // cvshow(img2);
 
-    console.log('bw:', bw, 'bh:', bh);
     for (let y = 0; y < bh; y++) {
       for (let x = 0; x < bw; x++) {
         let color = getPixel(img2, x, y).to('LAB');
@@ -663,10 +628,12 @@ export class TemplatePicture {
           action: (e, m) => { this.blockPlaceDialog(); }
         }, {
           name: '使用ブロック選択',
-          action: (e, m) => { this.selectBlocksDialog(); }
+          action: (e, m) => { blockSelectDialog();}
         }
       ]
     });
   }
 
 }
+
+

@@ -31,7 +31,6 @@ export class BlockTypeWindow {
 
   selecteBlock(bid: string | undefined) {
     this.selected_bid = bid;
-    console.log('select:', bid);
     $('.block-group-win .block-group .block img').removeClass('selected');
     if (bid) {
       $(`.block-group-win .block-group .block img[bid=${bid}]`).addClass('selected');

@@ -186,7 +186,6 @@ export class PixelEditor {
 
   spoid(e: JQuery.ClickEvent | JQuery.MouseUpEvent) {
     let { bx, by } = this.blockPos(e);
-    console.log(`bx:${bx} by:${by}`);
     let bid = this.bb.getPixel(bx, by);
     this.btw.selecteBlock(bid);
     this.draw();
@@ -269,7 +268,7 @@ export class PixelEditor {
       this.currentMode = handler;
     } else {
       $('#canvas-frame').removeAttr('mode');
-      console.log(`mode ${n} not defined`);
+      console.error(`mode ${n} not defined`);
     }
   }
 

@@ -41,7 +41,6 @@ export class ArtiboardModeHandler extends ModeHander {
   }
 
   override onMouseUp(e: JQuery.MouseUpEvent<any, any, any, any>): void {
-    console.log('mouse up');
     if (this.rect)
       this.rect.onMouseUp(e);
   }
@@ -149,7 +148,6 @@ class ResizableRect extends Rect {
       this.pe.tp.dstCt.by -= this.y;
       let m = this.pe.bb.minecraft;
       if (m) {
-        console.log('offset:', this.x, this.y);
         switch (m.x_direction) {
           case 'x+': m.offset.x += this.x; break;
           case 'x-': m.offset.x -= this.x; break;

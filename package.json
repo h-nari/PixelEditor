@@ -4,8 +4,8 @@
   "description": "pixel editor for minecraft",
   "main": "index.js",
   "scripts": {
-    "watch": "npx webpack -w",
-    "webpack": "npx webpack",
+    "watch": "webpack -w",
+    "webpack": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
