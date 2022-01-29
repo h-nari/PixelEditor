@@ -1,5 +1,5 @@
 import { assert_not_null } from "./asserts";
-import { BlockTypeWindow } from "./blockTypeWin";
+import { BlockTypeWindow, IBlockTypeSave } from "./blockTypeWin";
 import { CoordinateTransformation, ICoordinateTransformationState } from "./ct";
 import { a, div, input, span } from "./tag";
 import { BlockBuffer, IBlockBufferState } from "./blockBuffer";
@@ -24,6 +24,7 @@ interface IState {
   block: IBlockBufferState;
   templatePicture?: ITemplatePictureState;
   ct?: ICoordinateTransformationState;
+  blockType?: IBlockTypeSave;
 };
 
 interface IStateFile {
@@ -278,7 +279,8 @@ export class PixelEditor {
       backgroundColor: this.backgroundColor,
       block: this.bb.save(),
       templatePicture: this.tp.save(),
-      ct: this.ct.save()
+      ct: this.ct.save(),
+      blockType: this.btw.save(),
     };
     let json = JSON.stringify(s);
     if (json != this.savedJsonStr) {
@@ -304,6 +306,8 @@ export class PixelEditor {
       this.ct.load(s.ct);
     if (s.templatePicture)
       this.tp.load(s.templatePicture);
+    if (s.blockType)
+      this.btw.load(s.blockType);
     this.setDispBlockState();
     this.setDispImageState();
     this.draw();

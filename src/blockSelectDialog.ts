@@ -1,5 +1,6 @@
 import { assert_not_null } from "./asserts";
 import { blockGroups, IBlockGroup, IBlockType } from "./blockTypes";
+import { PixelEditor } from "./pixelEditor";
 import { TabbedWindow } from "./tabbedWindow";
 import { div, icon, img } from "./tag";
 import { TreeControl } from "./treeControl";
@@ -7,7 +8,7 @@ import { TreeControl } from "./treeControl";
 /**
  * 自動配置に使用するブロックを選択するダイアログ
  */
-export function blockSelectDialog() {
+export function blockSelectDialog(parent: PixelEditor) {
   let tree = new TreeControl();
   tree.initialNodeState = 'close';
   for (let g of blockGroups) {
@@ -30,6 +31,7 @@ export function blockSelectDialog() {
         for (let t of g.types)
           t.use = next_state == 'use_all';
         node.redraw();
+        parent.save();
         e.stopPropagation();
       });
     }
@@ -47,6 +49,7 @@ export function blockSelectDialog() {
         $(`#${c.id}`).on('click', e => {
           b.use = !blockCanUse(b);
           node.redraw();
+          parent.save();
           e.stopPropagation();
         });
       }
@@ -98,7 +101,7 @@ const blockGroupIcon = {
 type TBlockGroupIcon = typeof blockGroupIcon;
 type BlockGroupState = keyof TBlockGroupIcon;
 
-function blockCanUse(t: IBlockType) {
+export function blockCanUse(t: IBlockType) {
   return t.use === undefined || t.use;
 }
 

@@ -511,7 +511,7 @@ export class TemplatePicture {
         )
       ),
       onOpen: () => {
-        $('.block-place-dialog .btn-select-blocks').on('click', () => { blockSelectDialog(); })
+        $('.block-place-dialog .btn-select-blocks').on('click', () => { blockSelectDialog(this.parent); })
       },
       buttons: {
         place: {
@@ -628,7 +628,7 @@ export class TemplatePicture {
           action: (e, m) => { this.blockPlaceDialog(); }
         }, {
           name: '使用ブロック選択',
-          action: (e, m) => { blockSelectDialog();}
+          action: (e, m) => { blockSelectDialog(this.parent);}
         }
       ]
     });

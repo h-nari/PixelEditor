@@ -1,8 +1,17 @@
 import { assert_not_null } from "./asserts";
+import { blockCanUse } from "./blockSelectDialog";
 import { blockGroups, IBlockType } from "./blockTypes";
 import { Color, ColorRGB } from "./color";
 import { PixelEditor } from "./pixelEditor";
 import { div, img } from "./tag";
+
+
+/**
+ * Block の use状態を保存するインターっフェース
+ */
+export interface IBlockTypeSave {
+  [id: string]: boolean;
+};
 
 export class BlockTypeWindow {
   public parent: PixelEditor;
@@ -51,6 +60,28 @@ export class BlockTypeWindow {
   }
 
   /**
+   * ブロックのuseの状態を返す
+   */
+  save(): IBlockTypeSave {
+    let s: IBlockTypeSave = {};
+    for (let g of blockGroups)
+      for (let t of g.types)
+        s[t.id] = blockCanUse(t);
+    return s;
+  }
+
+  /**
+   * 
+   * 保存されたブロックのuse情報をloadする
+   */
+  load(s: IBlockTypeSave) {
+    for (let g of blockGroups)
+      for (let t of g.types)
+        t.use = s[t.id];
+  }
+
+
+  /**
    * 最も近い色のブロックのbidを返す
    * 
    * @param color 
@@ -62,6 +93,7 @@ export class BlockTypeWindow {
 
     for (let g of blockGroups) {
       for (let t of g.types) {
+        if (!blockCanUse(t)) continue;
         if (!t.color && t.imageBitmap)
           t.color = this.getAverageColor(color.value.type, t.imageBitmap).to('LAB');
         assert_not_null(t.color);
