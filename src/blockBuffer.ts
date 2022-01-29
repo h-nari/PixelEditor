@@ -550,7 +550,7 @@ export class BlockBuffer {
       div({ class: 'table' },
         ...r.list.map(e => div({ class: 'data' },
           div({ class: 'no ' }, no++),
-          div({ class: 'image ' }, e.bt?.id ? img({ src: `block/${e.bt?.id}.png` }) : ''),
+          div({ class: 'image ' }, e.bt?.id ? img({ src: `./public/block/${e.bt?.id}.png` }) : ''),
           div({ class: 'name ' }, e.bt ? e.bt.name : '?'),
           div({ class: 'num ' }, e.num, ' ブロック'),
           div({ class: 'num-stack' }, stackCount(e.num)),
