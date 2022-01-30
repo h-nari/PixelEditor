@@ -160,6 +160,20 @@
 .select-blocks-dialog .tree-node-self:hover {
   border: dashed 1px lightgray;
 }
+.select-blocks-dialog div.used-block-line {
+  display: flex;
+  flex-grow: 10;
+}
+.select-blocks-dialog div.used-block-line > div {
+  display: inline-block;
+}
+.select-blocks-dialog div.used-block-line .name {
+  flex-grow: 10;
+}
+.select-blocks-dialog div.used-block-line .num {
+  width: 100px;
+  text-align: end;
+}
 
 .initializing-win {
   display: flex;

@@ -9,7 +9,11 @@ import { TreeControl } from "./treeControl";
  * 自動配置に使用するブロックを選択するダイアログ
  */
 export function blockSelectDialog(parent: PixelEditor) {
-  let tree = new TreeControl();
+  let tree = new TreeControl();     // ブロック一覧用
+  let tree2 = new TreeControl();    // 使用されているブロック用
+
+  // ブロック一覧
+
   tree.initialNodeState = 'close';
   for (let g of blockGroups) {
     let node = tree.newNode();
@@ -31,6 +35,7 @@ export function blockSelectDialog(parent: PixelEditor) {
         for (let t of g.types)
           t.use = next_state == 'use_all';
         node.redraw();
+        tree2.redraw();
         parent.save();
         e.stopPropagation();
       });
@@ -57,24 +62,41 @@ export function blockSelectDialog(parent: PixelEditor) {
     }
   }
 
+  // 使用されているブロック
+
+  let r = parent.bb.tallyBlocks();
+  for (let b of r.list) {
+    let node = tree2.newNode();
+    tree2.add(node);
+    node.content = (n) => {
+      assert_not_null(b.bt);
+      return div({ class: 'used-block-line' },
+        div({ class: 'mx-1' }, img({ src: `./public/block/${b.bt.id}.png` })),
+        div({ class: 'name' }, b.bt.name),
+        div({ class: 'num' }, b.num + '個 使用'),
+        div({ class: 'icon-frame' }, icon(blockTypeUseIcon(b.bt))
+        ));
+    };
+    node.onBindCB = () => {
+      $(`#${node.id} .used-block-line`).on('click', e => {
+        assert_not_null(b.bt);
+        b.bt.use = !blockCanUse(b.bt);
+        node.redraw();
+        tree.redraw();
+        parent.save();
+      });
+    };
+  }
+
   let tab = new TabbedWindow({
     class: 'select-blocks-tab',
     tabs: [
-      {
-        name: 'ブロック一覧',
-        content: div(
-          div('ブロック一覧の中身'),
-          tree.html()
-        )
-      }, {
-        name: '使用されているブロック',
-        content: '使用されているブロックの中身'
-      }
-    ]
+      { name: 'ブロック一覧', content: tree.html() },
+      { name: '使用されているブロック', content: tree2.html() }]
   });
   $.confirm({
     title: '使用ブロック選択',
-    columnClass: 'large',
+    columnClass: 'medium',
     content: div({ class: 'select-blocks-dialog' },
       div({ class: 'my-3' }, '自動配置に使用するブロックを選択してください'),
       tab.html()
@@ -82,6 +104,7 @@ export function blockSelectDialog(parent: PixelEditor) {
     onOpen: () => {
       tab.bind();
       tree.bind();
+      tree2.bind();
     },
     buttons: {
       '閉じる': () => { }

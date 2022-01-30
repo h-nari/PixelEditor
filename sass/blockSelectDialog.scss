@@ -2,4 +2,18 @@
   .tree-node-self:hover {
     border: dashed 1px lightgray;
   }
+  div.used-block-line {
+    display: flex;
+    flex-grow: 10;
+    > div {
+      display: inline-block;
+    }
+    .name {
+      flex-grow: 10;
+    }
+    .num {
+      width: 100px;
+      text-align: end;
+    }
+  }
 }

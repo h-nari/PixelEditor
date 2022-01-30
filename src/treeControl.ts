@@ -26,7 +26,7 @@ export class TreeControl {
   }
 
   redraw() {
-    $('#' + this.id).html(this.top.html());
+    $('#' + this.id).html(this.top.children.map(c => c.html()).join(''))
     this.bind();
   }
 
