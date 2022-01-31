@@ -1,6 +1,7 @@
 import { assert_not_null } from "./asserts";
 import { blockGroups, IBlockGroup, IBlockType } from "./blockTypes";
 import { PixelEditor } from "./pixelEditor";
+import { Rect } from "./rect";
 import { TabbedWindow } from "./tabbedWindow";
 import { div, icon, img } from "./tag";
 import { TreeControl } from "./treeControl";
@@ -8,7 +9,7 @@ import { TreeControl } from "./treeControl";
 /**
  * 自動配置に使用するブロックを選択するダイアログ
  */
-export function blockSelectDialog(parent: PixelEditor) {
+export function blockSelectDialog(parent: PixelEditor, rect: Rect|undefined = undefined) {
   let tree = new TreeControl();     // ブロック一覧用
   let tree2 = new TreeControl();    // 使用されているブロック用
 
@@ -64,7 +65,7 @@ export function blockSelectDialog(parent: PixelEditor) {
 
   // 使用されているブロック
 
-  let r = parent.bb.tallyBlocks();
+  let r = parent.bb.tallyBlocks(rect);
   for (let b of r.list) {
     let node = tree2.newNode();
     tree2.add(node);

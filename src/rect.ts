@@ -52,4 +52,9 @@ export class Rect {
   path(ctx: CanvasRenderingContext2D) {
     ctx.rect(this.x, this.y, this.w, this.h);
   }
+
+  includes(x: number, y: number): boolean {
+    return x >= this.x && x < this.x1() && y >= this.y && y < this.y1();
+  }
+
 };

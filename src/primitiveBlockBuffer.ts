@@ -1,3 +1,5 @@
+import { Rect } from "./rect";
+
 export interface IPrimitiveBlockBufferState {
   width: number;
   height: number;
@@ -64,13 +66,26 @@ export class PrimitiveBlockBuffer {
       this.buf[i] = 0;
   }
 
-  tallyBlocks() {
+  tallyBlocks(rect: Rect | undefined = undefined) {
     let sum: { [idx: number]: number } = {};
+    /*
     for (let idx of this.buf) {
       if (idx in sum)
         sum[idx]++;
       else
         sum[idx] = 1;
+    }
+    */
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        if (rect && !rect.includes(x, y)) continue;
+        let idx = this.get(x, y);
+        if (idx in sum)
+          sum[idx]++;
+        else
+          sum[idx] = 1;
+      }
     }
     return sum;
   }

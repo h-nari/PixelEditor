@@ -1,13 +1,16 @@
 
+import cv from "opencv-ts";
 import { ArtiboardModeHandler } from "./artboardMode";
 import { assert_minecraft_xdir, assert_not_null } from "./asserts";
+import { blockSelectDialog } from "./blockSelectDialog";
 import { blockGroups, IBlockType } from "./blockTypes";
 import { CoordinateTransformation } from "./ct";
+import { getPixel } from "./cv_utils";
 import { Menu } from "./menu";
 import { PixelEditor } from "./pixelEditor";
 import { IPrimitiveBlockBufferState, PrimitiveBlockBuffer } from "./primitiveBlockBuffer";
 import { Rect } from "./rect";
-import { div, img, input, label, option, select } from "./tag";
+import { button, div, img, input, label, option, select, span } from "./tag";
 
 export type MinecraftXDir = 'x+' | 'x-' | 'z+' | 'z-';
 type TGrid = { pitch: number, color: string };
@@ -518,8 +521,8 @@ export class BlockBuffer {
     });
   }
 
-  tallyBlocks() {
-    let r = this.pbb.tallyBlocks();
+  tallyBlocks(rect: Rect | undefined = undefined) {
+    let r = this.pbb.tallyBlocks(rect);
     let list: { bt: IBlockType | undefined, num: number }[] = [];
     let unallocated = 0;
     let sum = 0;
@@ -535,8 +538,8 @@ export class BlockBuffer {
     return { list, sum, unallocated };
   }
 
-  tallyBlocksHtml() {
-    let r = this.tallyBlocks();
+  tallyBlocksHtml(rect: Rect | undefined = undefined) {
+    let r = this.tallyBlocks(rect);
     let no = 1;
     const stackCount = function (n: number) {
       let s = '';
@@ -561,20 +564,81 @@ export class BlockBuffer {
     return html;
   }
 
-  tallyBlocksDlg() {
+  tallyBlocksDlg(rect: Rect | undefined = undefined) {
     $.confirm({
       title: '使用ブロック数集計',
       columnClass: 'large',
-      content: this.tallyBlocksHtml(),
+      content: this.tallyBlocksHtml(rect),
       buttons: {
         'OK': () => { },
         '印刷用ウィンドウを開く': () => {
           let url = new URL(document.URL);
           url.search = 'print=tally';
+          if (rect)
+            url.search += `&rect=${rect.x},${rect.y},${rect.w},${rect.h}.h`;
           window.open(url.toString(), '_blank');
         }
       }
     });
+  }
+
+  /**
+   * ブロック自動配置ダイアログ
+   */
+  blockPlaceDialog(rect: Rect | undefined = undefined) {
+    let sel = this.parent.bb.selectedRect;
+    $.confirm({
+      title: 'ブロック自動配置',
+      columnClass: 'medium',
+      content: div({ class: 'block-place-dialog' },
+        div('背景画像を元にブロックを自動配置します'),
+        div({ class: 'button-box my-3' },
+          button({ class: 'btn btn-select-blocks bg-light mx-3' }, '使用ブロック選択')
+        )
+      ),
+      onOpen: () => {
+        $('.block-place-dialog .btn-select-blocks').on('click', () => { blockSelectDialog(this.parent, rect); })
+      },
+      buttons: {
+        place: {
+          text: '自動配置',
+          action: () => {
+            this.blockPlace(rect);
+          }
+        },
+        cancel: {
+          text: '閉じる'
+        }
+      }
+    })
+  }
+
+  /**
+     * 背景画像を元にブロックを自動配置する。
+     */
+  blockPlace(rect: Rect | undefined = undefined) {
+    let tp = this.parent.tp;
+    if (!tp.dstImg) throw new Error('no dstImg');
+    if (!tp.warpedRect) throw new Error('no warpedRect');
+
+    let wr = tp.warpedRect;
+    let img1 = tp.dstImg.roi(new cv.Rect(wr.x, wr.y, wr.w, wr.h));
+    let img2 = new cv.Mat();
+    let bw = this.parent.bb.col;
+    let bh = this.parent.bb.row;
+    cv.resize(img1, img2, new cv.Size(bw, bh), 0, 0, cv.INTER_AREA);
+
+    for (let y = 0; y < bh; y++) {
+      for (let x = 0; x < bw; x++) {
+        if (rect && !rect.includes(x, y)) continue;
+        let color = getPixel(img2, x, y).to('LAB');
+        let bid = this.parent.btw.selectBlockWithClosestColor(color);
+        this.parent.bb.setPixcel(x, y, bid);
+      }
+    }
+    img1.delete();
+    img2.delete();
+    this.parent.draw();
   }
 
   makeMenu() {
@@ -648,8 +712,21 @@ export class BlockBuffer {
           name: 'マインクラフト座標の設定',
           action: (e, m) => { this.minecraft_dlg(); }
         }, {
+          separator: true,
+        }, {
+          name: 'ブロック自動配置',
+          action: (e, m) => { this.blockPlaceDialog(); }
+        }, {
+          name: 'ブロック自動配置 (選択範囲内)',
+          action: (e, m) => { this.blockPlaceDialog(this.selectedRect); },
+          onBeforeExpand: m => { m.opt.disable = this.selectedRect ? false : true; }
+        }, {
           name: '使用ブロック集計',
           action: (e, m) => { this.tallyBlocksDlg(); }
+        }, {
+          name: '使用ブロック集計 (選択範囲内)',
+          action: (e, m) => { this.tallyBlocksDlg(this.selectedRect); },
+          onBeforeExpand: m => { m.opt.disable = this.selectedRect ? false : true; }
         }
       ]
     });

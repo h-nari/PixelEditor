@@ -1,14 +1,12 @@
 import cv, { Mat } from "opencv-ts";
 import { assert_not_null } from "./asserts";
-import { blockSelectDialog } from "./blockSelectDialog";
 import { CoordinateTransformation, ICoordinateTransformationState } from "./ct";
-import { getPixel } from "./cv_utils";
 import { marker, Marker } from "./marker";
 import { Menu } from "./menu";
 import { PixelEditor } from "./pixelEditor";
 import { Point } from "./point";
 import { Rect } from "./rect";
-import { button, div, input, label } from "./tag";
+import { div, input, label } from "./tag";
 
 const grip_size = 10;
 
@@ -497,63 +495,7 @@ export class TemplatePicture {
     this.parent.draw();
   }
 
-  /**
-   * ブロック自動配置ダイアログ
-   */
-  blockPlaceDialog() {
-    $.confirm({
-      title: 'ブロック自動配置',
-      columnClass: 'medium',
-      content: div({ class: 'block-place-dialog' },
-        div('背景画像を元にブロックを自動配置します'),
-        div({ class: 'button-box my-3' },
-          button({ class: 'btn btn-select-blocks bg-light mx-3' }, '使用ブロック選択')
-        )
-      ),
-      onOpen: () => {
-        $('.block-place-dialog .btn-select-blocks').on('click', () => { blockSelectDialog(this.parent); })
-      },
-      buttons: {
-        place: {
-          text: '自動配置',
-          action: () => {
-            this.blockPlace();
-          }
-        },
-        cancel: {
-          text: '閉じる'
-        }
-      }
-    })
-  }
-
-
-  /**
-   * 背景画像を元にブロックを自動配置する。
-   */
-  blockPlace() {
-    if (!this.dstImg) throw new Error('no dstImg');
-    if (!this.warpedRect) throw new Error('no warpedRect');
-
-    let wr = this.warpedRect;
-    let img1 = this.dstImg.roi(new cv.Rect(wr.x, wr.y, wr.w, wr.h));
-    let img2 = new cv.Mat();
-    let bw = this.parent.bb.col;
-    let bh = this.parent.bb.row;
-    cv.resize(img1, img2, new cv.Size(bw, bh), 0, 0, cv.INTER_AREA);
-
-    for (let y = 0; y < bh; y++) {
-      for (let x = 0; x < bw; x++) {
-        let color = getPixel(img2, x, y).to('LAB');
-        let bid = this.parent.btw.selectBlockWithClosestColor(color);
-        this.parent.bb.setPixcel(x, y, bid);
-      }
-    }
-    img1.delete();
-    img2.delete();
-    this.parent.draw();
-  }
-
+  
   /**
    * 背景画像のメニュー
    * 
@@ -621,14 +563,6 @@ export class TemplatePicture {
             this.parent.save();
             this.parent.draw();
           }
-        }, {
-          separator: true,
-        }, {
-          name: 'ブロック自動配置',
-          action: (e, m) => { this.blockPlaceDialog(); }
-        }, {
-          name: '使用ブロック選択',
-          action: (e, m) => { blockSelectDialog(this.parent);}
         }
       ]
     });
