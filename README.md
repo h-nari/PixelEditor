@@ -7,6 +7,11 @@ Pixel Image Editor for Minecraft
 マインクラフト・ワールド上にバーチャル秋葉原を建設するにあたり、
 ビル壁面のデザインを簡単にするために開発されました。
 
+このプログラムは、以下のサイトで利用可能です。
+<a href="https://h-nari.github.io/PixelEditor/">
+https://h-nari.github.io/PixelEditor/</a>
+
+
 - [主な機能](#主な機能)
 - [基本的な使い方](#基本的な使い方)
   - [ボタンの機能](#ボタンの機能)
@@ -22,6 +27,7 @@ Pixel Image Editor for Minecraft
 - [背景画像を使う](#背景画像を使う)
   - [背景画像の読込み](#背景画像の読込み)
   - [遠近法ワープ](#遠近法ワープ)
+- [関連ツール](#関連ツール)
 - [変更履歴](#変更履歴)
   - [v1.0.0](#v100)
 
@@ -187,6 +193,11 @@ Zの幅で17ｍとします。
 ブロックを塗って行きます。
 
 <img src="./img/sc220202a9.png" width="500">
+
+# 関連ツール
+
+* [ChizuCraft](https://github.com/h-nari/Chizucraft): 現実の地図をマインクラフトに再現するためのツール
+   
 
 # 変更履歴
 
