@@ -500,7 +500,7 @@ export class PixelEditor {
           name: 'このプログラムについて',
           action: async (e, m) => {
             let packageJson = await getPackageJson();
-            $.confirm({
+            $.alert({
               title: 'このプログラムについて',
               columnClass: 'medium',
               content: div(
